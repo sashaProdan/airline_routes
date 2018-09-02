@@ -18,7 +18,7 @@ class App extends Component {
       {name: 'Source Airport', property: 'src'},
       {name: 'Destination Airport', property: 'dest'},
     ];
-    const rows = DATA.routes.map(route => {
+    const rows = DATA.routes.slice(0, 200).map((route, i) => {
       let airline = DATA.getAirlineById(route.airline);
       let src = DATA.getAirportByCode(route.src);
       let dest = DATA.getAirportByCode(route.dest);
@@ -36,7 +36,7 @@ class App extends Component {
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
-          <img class="map" src="./equirectangular_world.jpg" alt="Airline routes" />
+          <img className="map" src="./equirectangular_world.jpg" alt="Airline routes" />
           <Table 
             className="routes-table"
             columns={columns}
