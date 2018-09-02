@@ -5,13 +5,16 @@ import Data from './data';
 class App extends Component {
   render() {
     const rows = Data.routes.map(route => {
+      let airline = Data.getAirlineById(route.airline);
+      let src = Data.getAirportByCode(route.src);
+      let dest = Data.getAirportByCode(route.dest);
       return (
         <tr>
-          <td>{route.airline}</td>
-          <td>{route.src}</td>
-          <td>{route.dest}</td>
+          <td>{airline.name}</td>
+          <td>{src.name}</td>
+          <td>{dest.name}</td>
         </tr>
-      )
+      );
     });
     return (
       <div className="app">
