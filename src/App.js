@@ -1,13 +1,27 @@
 import React, { Component } from 'react';
 import './App.css';
-import Data from './data';
+import DATA from './data';
+import Table from './components/Table';
 
 class App extends Component {
+  formatValue(property, value) {
+    if (property === 'airline') {
+      return DATA.getAirlineById(value).name;
+    } else {
+      return DATA.getAirportByCode(value).name;
+    }
+  }
+
   render() {
-    const rows = Data.routes.map(route => {
-      let airline = Data.getAirlineById(route.airline);
-      let src = Data.getAirportByCode(route.src);
-      let dest = Data.getAirportByCode(route.dest);
+    const columns = [
+      {name: 'Airline', property: 'airline'},
+      {name: 'Source Airport', property: 'src'},
+      {name: 'Destination Airport', property: 'dest'},
+    ];
+    const rows = DATA.routes.map(route => {
+      let airline = DATA.getAirlineById(route.airline);
+      let src = DATA.getAirportByCode(route.src);
+      let dest = DATA.getAirportByCode(route.dest);
       return (
         <tr>
           <td>{airline.name}</td>
@@ -22,19 +36,13 @@ class App extends Component {
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
-          <img src="./equirectangular_world.jpg" alt="Airline routes" />
-          <table className="routes-table">
-            <thead>
-              <tr>
-                <th>Airline</th>
-                <th>Source Airport</th>
-                <th>Destination Airport</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows}
-            </tbody>
-          </table>
+          <img class="map" src="./equirectangular_world.jpg" alt="Airline routes" />
+          <Table 
+            className="routes-table"
+            columns={columns}
+            rows={rows}
+            format={this.formatValue}
+          />
         </section>
       </div>
     );
