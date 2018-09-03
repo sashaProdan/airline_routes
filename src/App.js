@@ -57,15 +57,24 @@ class App extends Component {
       {name: 'Source Airport', property: 'src'},
       {name: 'Destination Airport', property: 'dest'},
     ];
+    const filteredRoutesByAirline = DATA.routes.filter(this.routeHasCurrentAirline);
+    const filteredRoutesByAirport = DATA.routes.filter(this.routeHasCurrentAirport);
 
-    const filteredAirlines = DATA.airlines;
-
-    const filteredAirports = DATA.airports;
-
-    const filteredRoutes = DATA.routes.filter((r) => {
-      return this.routeHasCurrentAirline(r) &&
-             this.routeHasCurrentAirport(r);
+    const filteredAirlines = DATA.airlines.filter( (airline) => {
+      return filteredRoutesByAirport.some( (route) => route.airline === airline.id );
     });
+
+    const filteredAirports = DATA.airports.filter( (airport) => {
+      return filteredRoutesByAirline.some( (route) => route.src === airport.code || route.dest === airport.code);
+    })
+
+    const filteredRoutes = DATA.routes.filter( (route) => {
+      return this.routeHasCurrentAirline(route) &&
+             this.routeHasCurrentAirport(route);
+    });
+    
+    const defaultsSelected = this.state.airline === this.defaultState.airline &&
+                             this.state.airport === this.defaultState.airport;
 
     return (
       <div className="app">
@@ -93,7 +102,7 @@ class App extends Component {
               value={this.state.airport} 
               onSelect={this.changeAirport} 
             />
-            <button onClick={this.resetFilters}>Show All Routes</button>
+            <button onClick={this.resetFilters} disabled={defaultsSelected}>Show All Routes</button>
           </p>
           <Table 
             className="routes-table"

@@ -13,6 +13,10 @@ class Table extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({page: 0});
+  }
+
   nextPage = (event) => {
     event.preventDefault();
     this.setState({
