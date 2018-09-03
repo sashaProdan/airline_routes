@@ -45,7 +45,12 @@ class App extends Component {
            this.state.airport === route.src ||
            this.state.airport === route.dest;
   }
-  
+
+  resetFilters = (event) => {
+    event.preventDefault();
+    this.setState({...this.defaultState});
+  }
+
   render() {
     const columns = [
       {name: 'Airline', property: 'airline'},
@@ -88,7 +93,7 @@ class App extends Component {
               value={this.state.airport} 
               onSelect={this.changeAirport} 
             />
-            <button>Show All Routes</button>
+            <button onClick={this.resetFilters}>Show All Routes</button>
           </p>
           <Table 
             className="routes-table"
