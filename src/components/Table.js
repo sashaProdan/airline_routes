@@ -34,7 +34,15 @@ class Table extends Component {
 
     const start = this.state.page * this.props.perPage;
 
-    const rows = this.props.rows.slice(start, start + this.props.perPage)
+    const rows = this.props.rows.slice(start, start + this.props.perPage).map( (row) => {
+      const rows = this.props.columns.map( (col) => {
+        const value = row[col.property];
+        return <td key={col.property + value}>{ this.props.format(col.property, value) }</td>
+      });
+      return <tr key={Object.values(row).join(':')}>
+        { rows }
+      </tr>
+    });
     return (
       <div>
         <table className={this.props.className}>
