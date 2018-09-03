@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import DATA from './data';
 import Table from './components/Table';
+import Select from './components/Select';
 
 class App extends Component {
   defaultState = {
@@ -23,9 +24,8 @@ class App extends Component {
     }
   }
 
-  changeAirline = (event) => {
-    const value = event.target.value;
-    if (event.target.value !== 'all') {
+  changeAirline = (value) => {
+    if (value !== 'all') {
       this.setState({airline: parseInt(value, 10)});
     } else {
       this.setState({airline: value});
@@ -37,7 +37,6 @@ class App extends Component {
            this.state.airline === route.airline;
   }
 
-
   render() {
     const columns = [
       {name: 'Airline', property: 'airline'},
@@ -45,11 +44,7 @@ class App extends Component {
       {name: 'Destination Airport', property: 'dest'},
     ];
 
-    const airlines = DATA.airlines.map(airline => {
-      return (
-        <option value={airline.id}>{airline.name}</option>
-      )
-    });
+    const filteredAirlines = DATA.airlines;
 
     const airports = DATA.airports.map(airport => {
       return (
@@ -65,16 +60,16 @@ class App extends Component {
         </header>
         <section>
           <img className="map" src="./equirectangular_world.jpg" alt="Airline routes" />
-          <div>
+          <p>
             <label htmlFor="airline">Show routes on</label>
-            <select 
-              id="airline" 
+            <Select 
+              options={filteredAirlines} 
+              valueKey="id" 
+              titleKey="name"
+              allTitle="All Airlines" 
               value={this.state.airline} 
-              onChange={this.changeAirline}
-            >
-              <option value={this.defaultState.airline}>All Airlines</option>
-              {airlines}
-            </select>
+              onSelect={this.changeAirline} 
+            />
             <label htmlFor="airport">flying in or out of</label>
             <select 
               id="airport" 
@@ -84,7 +79,7 @@ class App extends Component {
               {airports}
             </select>
             <button>Show All Routes</button>
-          </div>
+          </p>
           <Table 
             className="routes-table"
             columns={columns}
