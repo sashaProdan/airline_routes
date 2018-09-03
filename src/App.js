@@ -26,17 +26,26 @@ class App extends Component {
 
   changeAirline = (value) => {
     if (value !== 'all') {
-      this.setState({airline: parseInt(value, 10)});
-    } else {
-      this.setState({airline: value});
+      value = parseInt(value, 10);
     }
+    this.setState({airline: value});
+  }
+
+  changeAirport = (value) => {
+    this.setState({airport: value});
   }
 
   routeHasCurrentAirline = (route) => {
     return this.state.airline === 'all' ||
            this.state.airline === route.airline;
   }
-
+  
+  routeHasCurrentAirport = (route) => {
+    return this.state.airport === 'all' ||
+           this.state.airport === route.src ||
+           this.state.airport === route.dest;
+  }
+  
   render() {
     const columns = [
       {name: 'Airline', property: 'airline'},
@@ -46,12 +55,12 @@ class App extends Component {
 
     const filteredAirlines = DATA.airlines;
 
-    const airports = DATA.airports.map(airport => {
-      return (
-        <option value={airport.name}>{airport.name}</option>
-      )
-    })
-    const filteredRoutes = DATA.routes.filter( r => this.routeHasCurrentAirline(r));
+    const filteredAirports = DATA.airports;
+
+    const filteredRoutes = DATA.routes.filter((r) => {
+      return this.routeHasCurrentAirline(r) &&
+             this.routeHasCurrentAirport(r);
+    });
 
     return (
       <div className="app">
@@ -61,7 +70,7 @@ class App extends Component {
         <section>
           <img className="map" src="./equirectangular_world.jpg" alt="Airline routes" />
           <p>
-            <label htmlFor="airline">Show routes on</label>
+            Show routes on
             <Select 
               options={filteredAirlines} 
               valueKey="id" 
@@ -70,14 +79,15 @@ class App extends Component {
               value={this.state.airline} 
               onSelect={this.changeAirline} 
             />
-            <label htmlFor="airport">flying in or out of</label>
-            <select 
-              id="airport" 
-              value={this.state.airport}
-            >
-              <option value={this.defaultState.airport}>All Airports</option>
-              {airports}
-            </select>
+            flying in or out of
+            <Select 
+              options={filteredAirports} 
+              valueKey="code"
+              titleKey="name"
+              allTitle="All Airports" 
+              value={this.state.airport} 
+              onSelect={this.changeAirport} 
+            />
             <button>Show All Routes</button>
           </p>
           <Table 

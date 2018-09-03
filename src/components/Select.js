@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 class Select extends Component {
+  static defaultProps = {
+    value: 'all',
+  }
+  
   handleChange = (event) => {
     event.preventDefault();
     this.props.onSelect(event.target.value);
@@ -20,7 +24,6 @@ class Select extends Component {
     options.unshift(<option key="all" value="all">{this.props.allTitle}</option>);
     return (
       <select
-        id="airline"
         value={this.props.value}
         onChange={this.handleChange}
       >
